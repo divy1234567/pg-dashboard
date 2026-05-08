@@ -15,7 +15,9 @@ import {
     UnfoldMore,
     FilterList,
 } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 import JobFilters from "../../jobs/JobTable/JobFilters";
+import { localiseFilterValue } from "../../utils";
 
 const PodGroupsTableHeader = ({
     filters,
@@ -28,6 +30,7 @@ const PodGroupsTableHeader = ({
     toggleSortDirection,
 }) => {
     const theme = useTheme();
+    const { t } = useTranslation();
 
     const getFilterButtonStyle = (isActive) => ({
         textTransform: "none",
@@ -67,7 +70,7 @@ const PodGroupsTableHeader = ({
                         fontWeight="700"
                         color="text.primary"
                     >
-                        Name
+                        {t("common.table.name")}
                     </Typography>
                 </TableCell>
 
@@ -94,7 +97,7 @@ const PodGroupsTableHeader = ({
                             fontWeight="700"
                             color="text.primary"
                         >
-                            Namespace
+                            {t("common.table.namespace")}
                         </Typography>
                         <Button
                             size="small"
@@ -104,7 +107,11 @@ const PodGroupsTableHeader = ({
                                 filters.namespace !== "All",
                             )}
                         >
-                            {filters.namespace}
+                            {localiseFilterValue(
+                                t,
+                                "namespace",
+                                filters.namespace,
+                            )}
                         </Button>
                         <JobFilters
                             filterType="namespace"
@@ -133,7 +140,7 @@ const PodGroupsTableHeader = ({
                         fontWeight="700"
                         color="text.primary"
                     >
-                        Queue
+                        {t("common.table.queue")}
                     </Typography>
                 </TableCell>
 
@@ -153,7 +160,7 @@ const PodGroupsTableHeader = ({
                         fontWeight="700"
                         color="text.primary"
                     >
-                        Min Member
+                        {t("common.table.minMember")}
                     </Typography>
                 </TableCell>
 
@@ -174,7 +181,7 @@ const PodGroupsTableHeader = ({
                         fontWeight="700"
                         color="text.primary"
                     >
-                        Creation Time
+                        {t("common.table.creationTime")}
                     </Typography>
                     <Button
                         size="small"
@@ -211,7 +218,7 @@ const PodGroupsTableHeader = ({
                             },
                         }}
                     >
-                        Sort
+                        {t("common.actions.sort")}
                     </Button>
                 </TableCell>
 
@@ -239,7 +246,7 @@ const PodGroupsTableHeader = ({
                             fontWeight="700"
                             color="text.primary"
                         >
-                            Status
+                            {t("common.table.status")}
                         </Typography>
                         <Button
                             size="small"
@@ -247,7 +254,7 @@ const PodGroupsTableHeader = ({
                             onClick={(e) => handleFilterClick("status", e)}
                             sx={getFilterButtonStyle(filters.status !== "All")}
                         >
-                            {filters.status}
+                            {localiseFilterValue(t, "status", filters.status)}
                         </Button>
                         <JobFilters
                             filterType="status"

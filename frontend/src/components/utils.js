@@ -71,3 +71,38 @@ export const parseMemoryToMi = (memoryStr) => {
     if (memoryStr.includes("Ki")) return value / 1024;
     return value / 1024 / 1024; // default Bi
 };
+
+// Localise a filter dropdown value (e.g. "All", "Running") for display while
+// keeping the raw English value intact for filter logic.
+// Phase/state values per resource live under `<resource>.phase|state.*` in
+// the locale files, plus a shared `common.table.all` for the wildcard.
+//
+// `filterType` is the column key:
+//   "status"    → try pods.phase → jobs.phase → podgroups.phase
+//   "state"     → queues.state
+//   anything else (e.g. "namespace", "queue") falls through unchanged.
+const SENTINEL = "__missing__";
+
+export const localiseFilterValue = (t, filterType, value) => {
+    if (value === "All") return t("common.table.all");
+    if (!value) return value;
+
+    const lower = String(value).toLowerCase();
+
+    if (filterType === "status") {
+        for (const ns of ["pods", "jobs", "podgroups"]) {
+            const result = t(`${ns}.phase.${lower}`, {
+                defaultValue: SENTINEL,
+            });
+            if (result !== SENTINEL) return result;
+        }
+        return value;
+    }
+
+    if (filterType === "state") {
+        return t(`queues.state.${lower}`, { defaultValue: value });
+    }
+
+    // namespace, queue, or any other free-form value — pass through.
+    return value;
+};

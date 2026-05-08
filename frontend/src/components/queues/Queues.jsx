@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 import { parseCPU, parseMemoryToMi } from "../utils";
 import SearchBar from "../Searchbar";
 import QueueTable from "./QueueTable/QueueTable";
@@ -9,6 +10,7 @@ import QueueYamlDialog from "./QueueYamlDialog";
 import TitleComponent from "../Titlecomponent";
 
 const Queues = () => {
+    const { t } = useTranslation();
     const [queues, setQueues] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -47,12 +49,17 @@ const Queues = () => {
             setQueues(data.items || []);
             setTotalQueues(data.totalCount || 0);
         } catch (err) {
-            setError("Failed to fetch queues: " + err.message);
+            setError(
+                t("common.errors.fetchFailed", {
+                    resource: t("queues.resourceType"),
+                    message: err.message,
+                }),
+            );
             setQueues([]);
         } finally {
             setLoading(false);
         }
-    }, [pagination, searchText, filters]);
+    }, [pagination, searchText, filters, t]);
 
     useEffect(() => {
         fetchQueues();
@@ -66,14 +73,25 @@ const Queues = () => {
 
             if (response.status !== 201) {
                 let errMsg = response.data?.error || response.statusText;
-                alert("Failed to create queue: " + errMsg);
+                alert(
+                    t("common.errors.createFailed", {
+                        resource: t("queues.resourceType"),
+                        message: errMsg,
+                    }),
+                );
                 return;
             }
 
-            alert("Queue created successfully!");
+            alert(
+                t("common.errors.createSuccess", {
+                    resource: t("queues.resourceType"),
+                }),
+            );
         } catch (err) {
             alert(
-                "Network error: " + (err?.response?.data?.error || err.message),
+                t("common.errors.networkError", {
+                    message: err?.response?.data?.error || err.message,
+                }),
             );
         } finally {
             setLoading(false);
@@ -96,37 +114,45 @@ const Queues = () => {
         fetchQueues();
     }, [fetchQueues]);
 
-    const handleQueueClick = useCallback(async (queue) => {
-        try {
-            setLoading(true);
-            const response = await axios.get(
-                `/api/queue/${queue.metadata.name}/yaml`,
-                { responseType: "text" },
-            );
+    const handleQueueClick = useCallback(
+        async (queue) => {
+            try {
+                setLoading(true);
+                const response = await axios.get(
+                    `/api/queue/${queue.metadata.name}/yaml`,
+                    { responseType: "text" },
+                );
 
-            const formattedYaml = response.data
-                .split("\n")
-                .map((line) => {
-                    const keyMatch = line.match(/^(\s*)([^:\s]+):/);
-                    if (keyMatch) {
-                        const [, indent, key] = keyMatch;
-                        const value = line.slice(keyMatch[0].length);
-                        return `${indent}<span class="yaml-key">${key}</span>:${value}`;
-                    }
-                    return line;
-                })
-                .join("\n");
+                const formattedYaml = response.data
+                    .split("\n")
+                    .map((line) => {
+                        const keyMatch = line.match(/^(\s*)([^:\s]+):/);
+                        if (keyMatch) {
+                            const [, indent, key] = keyMatch;
+                            const value = line.slice(keyMatch[0].length);
+                            return `${indent}<span class="yaml-key">${key}</span>:${value}`;
+                        }
+                        return line;
+                    })
+                    .join("\n");
 
-            setSelectedQueueName(queue.metadata.name);
-            setSelectedQueueYaml(formattedYaml);
-            setOpenDialog(true);
-        } catch (err) {
-            console.error("Failed to fetch queue YAML:", err);
-            setError("Failed to fetch queue YAML: " + err.message);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+                setSelectedQueueName(queue.metadata.name);
+                setSelectedQueueYaml(formattedYaml);
+                setOpenDialog(true);
+            } catch (err) {
+                console.error("Failed to fetch queue YAML:", err);
+                setError(
+                    t("common.errors.fetchFailed", {
+                        resource: `${t("queues.resourceType")} YAML`,
+                        message: err.message,
+                    }),
+                );
+            } finally {
+                setLoading(false);
+            }
+        },
+        [t],
+    );
 
     const handleCloseDialog = useCallback(() => {
         setOpenDialog(false);
@@ -233,7 +259,7 @@ const Queues = () => {
                     <Typography variant="body1">{error}</Typography>
                 </Box>
             )}
-            <TitleComponent text="Volcano Queues Status" />
+            <TitleComponent text={t("queues.pageTitle")} />
             <Box>
                 <SearchBar
                     searchText={searchText}
@@ -242,12 +268,12 @@ const Queues = () => {
                     handleRefresh={handleRefresh}
                     fetchData={fetchQueues}
                     isRefreshing={loading}
-                    placeholder="Search queues..."
-                    refreshLabel="Refresh Queues"
-                    createlabel="Create Queue"
+                    placeholder={t("queues.search")}
+                    refreshLabel={t("queues.refresh")}
+                    createlabel={t("queues.create")}
                     onCreateClick={handleCreateQueue}
-                    dialogTitle="Create a Queue"
-                    dialogResourceNameLabel="Queue Name"
+                    dialogTitle={t("queues.createDialogTitle")}
+                    dialogResourceNameLabel={t("queues.resourceNameLabel")}
                     dialogResourceType="Queue"
                 />
             </Box>

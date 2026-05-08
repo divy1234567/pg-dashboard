@@ -18,6 +18,8 @@ import {
     FilterList,
     UnfoldMore,
 } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
+import { localiseFilterValue } from "../../utils";
 
 const QueueTableHeader = ({
     allocatedFields,
@@ -31,6 +33,7 @@ const QueueTableHeader = ({
     setAnchorEl,
 }) => {
     const theme = useTheme();
+    const { t } = useTranslation();
 
     return (
         <TableHead>
@@ -53,7 +56,7 @@ const QueueTableHeader = ({
                         color="text.primary"
                         sx={{ letterSpacing: "0.02em" }}
                     >
-                        Name
+                        {t("common.table.name")}
                     </Typography>
                 </TableCell>
 
@@ -83,7 +86,7 @@ const QueueTableHeader = ({
                                 color="text.primary"
                                 sx={{ letterSpacing: "0.02em" }}
                             >
-                                {`Allocated ${field}`}
+                                {t("queues.allocatedField", { field })}
                             </Typography>
                             <IconButton
                                 size="small"
@@ -135,7 +138,7 @@ const QueueTableHeader = ({
                         color="text.primary"
                         sx={{ letterSpacing: "0.02em" }}
                     >
-                        Creation Time
+                        {t("common.table.creationTime")}
                     </Typography>
                     <Button
                         size="small"
@@ -176,7 +179,7 @@ const QueueTableHeader = ({
                             },
                         }}
                     >
-                        Sort
+                        {t("common.actions.sort")}
                     </Button>
                 </TableCell>
                 <TableCell
@@ -197,7 +200,7 @@ const QueueTableHeader = ({
                         color="text.primary"
                         sx={{ letterSpacing: "0.02em" }}
                     >
-                        State
+                        {t("common.table.state")}
                     </Typography>
                     <Button
                         size="small"
@@ -228,7 +231,13 @@ const QueueTableHeader = ({
                             },
                         }}
                     >
-                        Filter: {filters.status}
+                        {t("common.table.filter", {
+                            value: localiseFilterValue(
+                                t,
+                                "state",
+                                filters.status,
+                            ),
+                        })}
                     </Button>
                     <Menu
                         anchorEl={anchorEl.status}
@@ -288,7 +297,7 @@ const QueueTableHeader = ({
                                     }),
                                 }}
                             >
-                                {status}
+                                {localiseFilterValue(t, "state", status)}
                             </MenuItem>
                         ))}
                     </Menu>
@@ -312,7 +321,7 @@ const QueueTableHeader = ({
                         color="text.primary"
                         sx={{ letterSpacing: "0.02em" }}
                     >
-                        Actions
+                        {t("common.table.actions")}
                     </Typography>
                 </TableCell>
             </TableRow>

@@ -3,6 +3,7 @@ import { TableRow, TableCell, Box, Chip, useTheme, alpha } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import Edit from "@mui/icons-material/Edit";
+import { useTranslation } from "react-i18next";
 import EditQueueDialog from "./EditQueueDialog";
 
 const QueueTableRow = ({
@@ -13,6 +14,7 @@ const QueueTableRow = ({
     onQueueUpdate,
 }) => {
     const theme = useTheme();
+    const { t } = useTranslation();
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
     const getStateColor = (status) => {
@@ -27,6 +29,16 @@ const QueueTableRow = ({
                 return theme.palette.grey[500];
         }
     };
+
+    const stateLabels = {
+        Open: t("queues.state.open"),
+        Closing: t("queues.state.closing"),
+        Closed: t("queues.state.closed"),
+    };
+    const rawState = queue.status ? queue.status.state : null;
+    const stateLabel = rawState
+        ? stateLabels[rawState] || rawState
+        : t("common.table.unknown");
 
     const handleOpenEditDialog = () => {
         setIsEditDialogOpen(true);
@@ -105,11 +117,9 @@ const QueueTableRow = ({
 
                 <TableCell sx={{ padding: "16px 24px" }}>
                     <Chip
-                        label={queue.status ? queue.status.state : "Unknown"}
+                        label={stateLabel}
                         sx={{
-                            bgcolor: getStateColor(
-                                queue.status ? queue.status.state : "Unknown",
-                            ),
+                            bgcolor: getStateColor(rawState || "Unknown"),
                             color: "common.white",
                             height: "30px",
                             fontWeight: 600,

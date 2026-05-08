@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 import TitleComponent from "../Titlecomponent";
 import { fetchAllNamespaces, fetchAllQueues } from "../utils";
 import JobTable from "./JobTable/JobTable";
@@ -9,6 +10,7 @@ import JobDialog from "./JobDialog";
 import SearchBar from "../Searchbar";
 
 const Jobs = () => {
+    const { t } = useTranslation();
     const [jobs, setJobs] = useState([]);
     const [cachedJobs, setCachedJobs] = useState([]);
     const [, setLoading] = useState(true);
@@ -59,12 +61,17 @@ const Jobs = () => {
             setCachedJobs(data.items || []);
             setTotalJobs(data.totalCount || 0);
         } catch (err) {
-            setError("Failed to fetch jobs: " + err.message);
+            setError(
+                t("common.errors.fetchFailed", {
+                    resource: t("jobs.resourceType"),
+                    message: err.message,
+                }),
+            );
             setCachedJobs([]);
         } finally {
             setLoading(false);
         }
-    }, [searchText, filters]);
+    }, [searchText, filters, t]);
 
     useEffect(() => {
         fetchJobs();
@@ -89,37 +96,45 @@ const Jobs = () => {
         fetchJobs();
     };
 
-    const handleJobClick = useCallback(async (job) => {
-        try {
-            setLoading(true);
-            const response = await axios.get(
-                `/api/job/${job.metadata.namespace}/${job.metadata.name}/yaml`,
-                { responseType: "text" },
-            );
+    const handleJobClick = useCallback(
+        async (job) => {
+            try {
+                setLoading(true);
+                const response = await axios.get(
+                    `/api/job/${job.metadata.namespace}/${job.metadata.name}/yaml`,
+                    { responseType: "text" },
+                );
 
-            const formattedYaml = response.data
-                .split("\n")
-                .map((line) => {
-                    const keyMatch = line.match(/^(\s*)([^:\s]+):/);
-                    if (keyMatch) {
-                        const [, indent, key] = keyMatch;
-                        const value = line.slice(keyMatch[0].length);
-                        return `${indent}<span class="yaml-key">${key}</span>:${value}`;
-                    }
-                    return line;
-                })
-                .join("\n");
+                const formattedYaml = response.data
+                    .split("\n")
+                    .map((line) => {
+                        const keyMatch = line.match(/^(\s*)([^:\s]+):/);
+                        if (keyMatch) {
+                            const [, indent, key] = keyMatch;
+                            const value = line.slice(keyMatch[0].length);
+                            return `${indent}<span class="yaml-key">${key}</span>:${value}`;
+                        }
+                        return line;
+                    })
+                    .join("\n");
 
-            setSelectedJobName(job.metadata.name);
-            setSelectedJobYaml(formattedYaml);
-            setOpenDialog(true);
-        } catch (err) {
-            console.error("Failed to fetch job YAML:", err);
-            setError("Failed to fetch job YAML: " + err.message);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+                setSelectedJobName(job.metadata.name);
+                setSelectedJobYaml(formattedYaml);
+                setOpenDialog(true);
+            } catch (err) {
+                console.error("Failed to fetch job YAML:", err);
+                setError(
+                    t("common.errors.fetchFailed", {
+                        resource: `${t("jobs.resourceType")} YAML`,
+                        message: err.message,
+                    }),
+                );
+            } finally {
+                setLoading(false);
+            }
+        },
+        [t],
+    );
 
     const handleCloseDialog = useCallback(() => {
         setOpenDialog(false);
@@ -150,20 +165,29 @@ const Jobs = () => {
             });
 
             if (!response.ok) {
-                let errorMsg = "Unknown error";
+                let errorMsg = t("common.errors.unknown");
                 try {
                     const errData = await response.json();
                     errorMsg = errData.error || response.statusText;
                 } catch {
                     // ignore error
                 }
-                alert("Error creating job: " + errorMsg);
+                alert(
+                    t("common.errors.createError", {
+                        resource: t("jobs.resourceType"),
+                        message: errorMsg,
+                    }),
+                );
                 return;
             }
 
-            alert("Job created successfully!");
+            alert(
+                t("common.errors.createSuccess", {
+                    resource: t("jobs.resourceType"),
+                }),
+            );
         } catch (err) {
-            alert("Network error: " + err.message);
+            alert(t("common.errors.networkError", { message: err.message }));
         }
     };
 
@@ -213,7 +237,7 @@ const Jobs = () => {
                     <Typography variant="body1">{error}</Typography>
                 </Box>
             )}
-            <TitleComponent text="Volcano Jobs Status" />
+            <TitleComponent text={t("jobs.pageTitle")} />
             <Box>
                 <SearchBar
                     searchText={searchText}
@@ -222,11 +246,11 @@ const Jobs = () => {
                     handleRefresh={fetchJobs}
                     fetchData={fetchJobs}
                     isRefreshing={false} // Update if needed
-                    placeholder="Search jobs..."
-                    refreshLabel="Refresh Job Listings"
-                    createlabel="Create Job"
-                    dialogTitle="Create a Job"
-                    dialogResourceNameLabel="Job Name"
+                    placeholder={t("jobs.search")}
+                    refreshLabel={t("jobs.refresh")}
+                    createlabel={t("jobs.create")}
+                    dialogTitle={t("jobs.createDialogTitle")}
+                    dialogResourceNameLabel={t("jobs.resourceNameLabel")}
                     dialogResourceType="Job"
                     onCreateClick={handleCreateJob}
                 />

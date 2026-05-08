@@ -1,5 +1,7 @@
 import React from "react";
 import { Menu, MenuItem } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { localiseFilterValue } from "../../utils";
 
 const JobFilters = ({
     filterType,
@@ -9,6 +11,7 @@ const JobFilters = ({
     handleFilterClose,
     anchorEl,
 }) => {
+    const { t } = useTranslation();
     return (
         <Menu
             anchorEl={anchorEl}
@@ -21,7 +24,7 @@ const JobFilters = ({
                     selected={option === currentValue}
                     onClick={() => handleFilterClick(filterType, option)}
                 >
-                    {option}
+                    {localiseFilterValue(t, filterType, option)}
                 </MenuItem>
             ))}
         </Menu>

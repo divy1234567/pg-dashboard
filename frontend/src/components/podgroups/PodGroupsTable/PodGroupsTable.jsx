@@ -9,6 +9,7 @@ import {
     useTheme,
     alpha,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import PodGroupsTableHeader from "./PodGroupsTableHeader";
 import PodGroupsTableRow from "./PodGroupsTableRow";
 
@@ -25,6 +26,7 @@ const PodGroupsTable = ({
     toggleSortDirection,
 }) => {
     const theme = useTheme();
+    const { t } = useTranslation();
 
     return (
         <React.Fragment>
@@ -76,7 +78,7 @@ const PodGroupsTable = ({
                         {podGroups.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={6} align="center">
-                                    No podgroups found.
+                                    {t("podgroups.empty")}
                                 </TableCell>
                             </TableRow>
                         ) : (

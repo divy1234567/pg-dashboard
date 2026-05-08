@@ -7,6 +7,7 @@ import {
     Box,
     Button,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const QueueYamlDialog = ({
     openDialog,
@@ -14,6 +15,7 @@ const QueueYamlDialog = ({
     selectedQueueName,
     selectedQueueYaml,
 }) => {
+    const { t } = useTranslation();
     return (
         <Dialog
             open={openDialog}
@@ -30,7 +32,9 @@ const QueueYamlDialog = ({
                 },
             }}
         >
-            <DialogTitle>Queue YAML - {selectedQueueName}</DialogTitle>
+            <DialogTitle>
+                {t("queues.yamlTitle", { name: selectedQueueName })}
+            </DialogTitle>
             <DialogContent>
                 <Box
                     sx={{
@@ -79,7 +83,7 @@ const QueueYamlDialog = ({
                             },
                         }}
                     >
-                        Close
+                        {t("common.actions.close")}
                     </Button>
                 </Box>
             </DialogActions>

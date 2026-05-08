@@ -1,9 +1,15 @@
 import React from "react";
 import { TableRow, TableCell, Chip, useTheme, alpha } from "@mui/material";
-import { calculateAge } from "../../utils";
+import { useTranslation } from "react-i18next";
+import { calculateAge, localiseFilterValue } from "../../utils";
 
 const PodRow = ({ pod, getStatusColor, onPodClick }) => {
     const theme = useTheme();
+    const { t } = useTranslation();
+    const rawPhase = pod.status?.phase;
+    const phaseLabel = rawPhase
+        ? localiseFilterValue(t, "status", rawPhase)
+        : t("common.table.unknown");
 
     return (
         <TableRow
@@ -62,9 +68,9 @@ const PodRow = ({ pod, getStatusColor, onPodClick }) => {
 
             <TableCell sx={{ padding: "16px 24px" }}>
                 <Chip
-                    label={pod.status?.phase || "Unknown"}
+                    label={phaseLabel}
                     sx={{
-                        bgcolor: getStatusColor(pod.status?.phase || "Unknown"),
+                        bgcolor: getStatusColor(rawPhase || "Unknown"),
                         color: "common.white",
                         height: "30px",
                         fontWeight: 600,

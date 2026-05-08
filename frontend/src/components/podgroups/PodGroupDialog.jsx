@@ -7,8 +7,10 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const PodGroupDialog = ({ open, handleClose, selectedName, selectedYaml }) => {
+    const { t } = useTranslation();
     return (
         <Dialog
             open={open}
@@ -25,7 +27,9 @@ const PodGroupDialog = ({ open, handleClose, selectedName, selectedYaml }) => {
                 },
             }}
         >
-            <DialogTitle>PodGroup YAML - {selectedName}</DialogTitle>
+            <DialogTitle>
+                {t("podgroups.yamlTitle", { name: selectedName })}
+            </DialogTitle>
             <DialogContent>
                 <Box
                     sx={{
@@ -74,7 +78,7 @@ const PodGroupDialog = ({ open, handleClose, selectedName, selectedYaml }) => {
                             },
                         }}
                     >
-                        Close
+                        {t("common.actions.close")}
                     </Button>
                 </Box>
             </DialogActions>

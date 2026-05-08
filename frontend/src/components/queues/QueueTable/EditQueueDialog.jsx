@@ -16,9 +16,11 @@ import {
 } from "@mui/material";
 import Editor from "@monaco-editor/react";
 import yaml from "js-yaml";
+import { useTranslation } from "react-i18next";
 
-const RenderFields = ({ data, onChange, path = [] }) =>
-    Object.entries(data || {}).map(([key, value]) => {
+const RenderFields = ({ data, onChange, path = [] }) => {
+    const { t } = useTranslation();
+    return Object.entries(data || {}).map(([key, value]) => {
         if (key === "managedFields" || key.startsWith("f:")) return null;
 
         const currentPath = [...path, key];
@@ -29,7 +31,9 @@ const RenderFields = ({ data, onChange, path = [] }) =>
                     key={currentPath.join(".")}
                     sx={{ mb: 2, pl: 2, borderLeft: "2px solid #ccc" }}
                 >
-                    <Typography variant="subtitle2">{key} (Array)</Typography>
+                    <Typography variant="subtitle2">
+                        {t("queues.section.array", { key })}
+                    </Typography>
                     {value.map((item, index) => {
                         const itemPath = [...currentPath, index];
                         if (typeof item === "object" && item !== null) {
@@ -43,7 +47,7 @@ const RenderFields = ({ data, onChange, path = [] }) =>
                                     }}
                                 >
                                     <Typography variant="caption">
-                                        Item {index}
+                                        {t("queues.section.item", { index })}
                                     </Typography>
                                     <RenderFields
                                         data={item}
@@ -129,6 +133,7 @@ const RenderFields = ({ data, onChange, path = [] }) =>
             />
         );
     });
+};
 
 const updateNestedValue = (obj, path, value) => {
     const newObj = { ...obj };
@@ -143,6 +148,7 @@ const updateNestedValue = (obj, path, value) => {
 };
 
 const EditQueueDialog = ({ open, queue, onClose, onSave }) => {
+    const { t } = useTranslation();
     const [editorValue, setEditorValue] = useState("");
     const [editMode, setEditMode] = useState("yaml");
     const [formState, setFormState] = useState({});
@@ -251,7 +257,7 @@ const EditQueueDialog = ({ open, queue, onClose, onSave }) => {
             onClose();
         } catch (err) {
             console.error("Save failed:", err);
-            alert(err.message || "Failed to save");
+            alert(err.message || t("common.errors.saveFailed"));
         }
     };
 
@@ -264,14 +270,14 @@ const EditQueueDialog = ({ open, queue, onClose, onSave }) => {
                     alignItems: "center",
                 }}
             >
-                Edit Queue
+                {t("queues.edit")}
                 <ToggleButtonGroup
                     value={editMode}
                     exclusive
                     onChange={handleModeChange}
                 >
-                    <ToggleButton value="yaml">YAML</ToggleButton>
-                    <ToggleButton value="form">Form</ToggleButton>
+                    <ToggleButton value="yaml">{t("queues.yaml")}</ToggleButton>
+                    <ToggleButton value="form">{t("queues.form")}</ToggleButton>
                 </ToggleButtonGroup>
             </DialogTitle>
 
@@ -304,7 +310,7 @@ const EditQueueDialog = ({ open, queue, onClose, onSave }) => {
                     variant="contained"
                     disabled={saving}
                 >
-                    Cancel
+                    {t("common.actions.cancel")}
                 </Button>
                 <Button
                     onClick={handleSave}
@@ -313,7 +319,9 @@ const EditQueueDialog = ({ open, queue, onClose, onSave }) => {
                     disabled={saving}
                     startIcon={saving && <CircularProgress size={18} />}
                 >
-                    {saving ? "Updating…" : "Update"}
+                    {saving
+                        ? t("common.actions.updating")
+                        : t("common.actions.update")}
                 </Button>
             </DialogActions>
         </Dialog>

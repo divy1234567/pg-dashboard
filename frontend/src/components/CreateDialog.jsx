@@ -16,8 +16,20 @@ import {
 } from "@mui/material";
 import { Button } from "react-bootstrap";
 import { Plus, Minus, ChevronDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const primaryColor = "#E34C26";
+
+// Localised display label for one of the optional resource sections
+// (guarantee/capability/deserved). Falls back to the capitalised English
+// section name if the translation is missing.
+const sectionLabel = (t, section) => {
+    const translated = t(`createDialog.section.${section}`, {
+        defaultValue: "",
+    });
+    if (translated) return translated;
+    return section.charAt(0).toUpperCase() + section.slice(1);
+};
 
 const CreateDialog = ({
     open,
@@ -27,6 +39,7 @@ const CreateDialog = ({
     resourceNameLabel,
     resourceType,
 }) => {
+    const { t } = useTranslation();
     const [queueData, setQueueData] = useState({
         name: "",
         weight: "",
@@ -106,23 +119,28 @@ const CreateDialog = ({
     const validate = () => {
         let newErrors = {};
         if (!queueData.name.trim()) {
-            newErrors.name = `${resourceType} name is required`;
+            newErrors.name = t("createDialog.nameRequired", {
+                resource: resourceType,
+            });
         }
 
         if (isPod) {
             if (!queueData.containerName.trim()) {
-                newErrors.containerName = "Container name is required";
+                newErrors.containerName = t(
+                    "createDialog.containerNameRequired",
+                );
             }
             if (!queueData.image.trim()) {
-                newErrors.image = "Container image is required";
+                newErrors.image = t("createDialog.containerImageRequired");
             }
             if (
                 !queueData.containerPort ||
                 isNaN(queueData.containerPort) ||
                 parseInt(queueData.containerPort) < 1
             ) {
-                newErrors.containerPort =
-                    "Container port is required and must be positive";
+                newErrors.containerPort = t(
+                    "createDialog.containerPortRequired",
+                );
             }
         } else {
             // Queue validation
@@ -131,7 +149,7 @@ const CreateDialog = ({
                 isNaN(queueData.weight) ||
                 parseInt(queueData.weight) < 1
             ) {
-                newErrors.weight = "Weight is required and must be positive";
+                newErrors.weight = t("createDialog.weightRequired");
             }
         }
 
@@ -299,26 +317,27 @@ const CreateDialog = ({
                 expandIcon={<ChevronDown size={18} color="#888" />}
             >
                 <Typography sx={{ fontWeight: 500 }}>
-                    {section.charAt(0).toUpperCase() + section.slice(1)}{" "}
-                    Resources (Optional)
+                    {t("createDialog.resourcesOptional", {
+                        section: sectionLabel(t, section),
+                    })}
                 </Typography>
             </AccordionSummary>
             <AccordionDetails>
                 <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
                     <TextField
-                        label="CPU"
+                        label={t("createDialog.cpu")}
                         value={queueData[section].cpu}
                         onChange={handleResourceChange(section, "cpu")}
                         fullWidth
-                        placeholder="e.g. 1000m"
+                        placeholder={t("createDialog.cpuPlaceholder")}
                         sx={tfStyle}
                     />
                     <TextField
-                        label="Memory"
+                        label={t("createDialog.memory")}
                         value={queueData[section].memory}
                         onChange={handleResourceChange(section, "memory")}
                         fullWidth
-                        placeholder="e.g. 1Gi"
+                        placeholder={t("createDialog.memoryPlaceholder")}
                         sx={tfStyle}
                     />
                 </Box>
@@ -332,7 +351,7 @@ const CreateDialog = ({
                                 fontSize: "0.9rem",
                             }}
                         >
-                            Custom Scalar Resources
+                            {t("createDialog.customScalarResources")}
                         </Box>
                         <IconButton
                             size="small"
@@ -360,7 +379,7 @@ const CreateDialog = ({
                             }}
                         >
                             <TextField
-                                label="Key"
+                                label={t("createDialog.key")}
                                 value={scalar.key}
                                 onChange={handleScalarChange(
                                     section,
@@ -368,12 +387,12 @@ const CreateDialog = ({
                                     "key",
                                 )}
                                 fullWidth
-                                placeholder="e.g. nvidia.com/gpu"
+                                placeholder={t("createDialog.keyPlaceholder")}
                                 sx={tfStyle}
                                 size="small"
                             />
                             <TextField
-                                label="Value"
+                                label={t("createDialog.value")}
                                 value={scalar.value}
                                 onChange={handleScalarChange(
                                     section,
@@ -381,7 +400,7 @@ const CreateDialog = ({
                                     "value",
                                 )}
                                 fullWidth
-                                placeholder="e.g. 1"
+                                placeholder={t("createDialog.valuePlaceholder")}
                                 sx={tfStyle}
                                 size="small"
                             />
@@ -410,38 +429,38 @@ const CreateDialog = ({
     const renderPodFields = () => (
         <>
             <TextField
-                label="Namespace"
+                label={t("createDialog.namespaceLabel")}
                 value={queueData.namespace}
                 onChange={handleChange("namespace")}
                 fullWidth
                 sx={tfStyle}
-                placeholder="default"
+                placeholder={t("createDialog.namespacePlaceholder")}
             />
             <TextField
                 required
-                label="Container Name"
+                label={t("createDialog.containerName")}
                 value={queueData.containerName}
                 onChange={handleChange("containerName")}
                 fullWidth
                 sx={tfStyle}
                 error={!!errors.containerName}
                 helperText={errors.containerName}
-                placeholder="my-container"
+                placeholder={t("createDialog.containerNamePlaceholder")}
             />
             <TextField
                 required
-                label="Container Image"
+                label={t("createDialog.containerImage")}
                 value={queueData.image}
                 onChange={handleChange("image")}
                 fullWidth
                 sx={tfStyle}
                 error={!!errors.image}
                 helperText={errors.image}
-                placeholder="nginx:latest"
+                placeholder={t("createDialog.containerImagePlaceholder")}
             />
             <TextField
                 required
-                label="Container Port"
+                label={t("createDialog.containerPort")}
                 type="number"
                 value={queueData.containerPort}
                 onChange={handleChange("containerPort")}
@@ -450,7 +469,7 @@ const CreateDialog = ({
                 error={!!errors.containerPort}
                 helperText={errors.containerPort}
                 inputProps={{ min: 1 }}
-                placeholder="80"
+                placeholder={t("createDialog.containerPortPlaceholder")}
             />
         </>
     );
@@ -458,7 +477,7 @@ const CreateDialog = ({
     const renderQueueFields = () => (
         <>
             <TextField
-                label="Weight *"
+                label={t("createDialog.weight")}
                 type="number"
                 value={queueData.weight}
                 onChange={handleChange("weight")}
@@ -479,7 +498,7 @@ const CreateDialog = ({
                         }}
                     />
                 }
-                label="Reclaimable"
+                label={t("createDialog.reclaimable")}
                 sx={{
                     ".MuiTypography-root": {
                         fontWeight: 500,
@@ -556,7 +575,7 @@ const CreateDialog = ({
                         transition: "all 0.2s",
                     }}
                 >
-                    Cancel
+                    {t("common.actions.cancel")}
                 </Button>
                 <Button
                     onClick={handleSubmit}
@@ -571,7 +590,7 @@ const CreateDialog = ({
                         transition: "all 0.2s",
                     }}
                 >
-                    Create
+                    {t("common.actions.create")}
                 </Button>
             </DialogActions>
         </Dialog>

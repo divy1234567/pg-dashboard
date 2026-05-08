@@ -9,6 +9,7 @@ import {
     useTheme,
     alpha,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import QueueTableHeader from "./QueueTableHeader";
 import QueueTableRow from "./QueueTableRow";
 import QueueTableDeleteDialog from "./QueueTableDeleteDialog";
@@ -28,6 +29,7 @@ const QueueTable = ({
     onQueueUpdate,
 }) => {
     const theme = useTheme();
+    const { t } = useTranslation();
 
     const [queues, setQueues] = useState([]);
 
@@ -114,7 +116,7 @@ const QueueTable = ({
             handleCloseDeleteDialog();
         } catch (error) {
             console.error("Error deleting queue:", error);
-            setDeleteError(error.message || "An unexpected error occurred.");
+            setDeleteError(error.message || t("common.errors.unexpected"));
         } finally {
             setIsDeleting(false);
         }
@@ -174,7 +176,7 @@ const QueueTable = ({
                                     colSpan={allocatedFields.length + 2}
                                     align="center"
                                 >
-                                    No queues found.
+                                    {t("queues.empty")}
                                 </TableCell>
                             </TableRow>
                         ) : (

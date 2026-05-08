@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import axios from "axios";
 import { escape } from "lodash";
+import { useTranslation } from "react-i18next";
 import TitleComponent from "../Titlecomponent";
 import { fetchAllNamespaces } from "../utils";
 import PodGroupsTable from "./PodGroupsTable/PodGroupsTable";
@@ -10,6 +11,7 @@ import SearchBar from "../Searchbar";
 import PodGroupDialog from "./PodGroupDialog"; // Need to create this
 
 const PodGroups = () => {
+    const { t } = useTranslation();
     const [podGroups, setPodGroups] = useState([]);
     const [cachedPodGroups, setCachedPodGroups] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -56,12 +58,17 @@ const PodGroups = () => {
             setCachedPodGroups(data.items || []);
             setTotalItems(data.totalCount || 0);
         } catch (err) {
-            setError("Failed to fetch podgroups: " + err.message);
+            setError(
+                t("common.errors.fetchFailed", {
+                    resource: t("podgroups.resourceType"),
+                    message: err.message,
+                }),
+            );
             setCachedPodGroups([]);
         } finally {
             setLoading(false);
         }
-    }, [searchText, filters]);
+    }, [searchText, filters, t]);
 
     useEffect(() => {
         fetchPodGroups();
@@ -85,37 +92,45 @@ const PodGroups = () => {
         fetchPodGroups();
     };
 
-    const handleClick = useCallback(async (pg) => {
-        try {
-            setLoading(true);
-            const response = await axios.get(
-                `/api/podgroups/${pg.metadata.namespace}/${pg.metadata.name}/yaml`,
-                { responseType: "text" },
-            );
+    const handleClick = useCallback(
+        async (pg) => {
+            try {
+                setLoading(true);
+                const response = await axios.get(
+                    `/api/podgroups/${pg.metadata.namespace}/${pg.metadata.name}/yaml`,
+                    { responseType: "text" },
+                );
 
-            const formattedYaml = response.data
-                .split("\n")
-                .map((line) => {
-                    const keyMatch = line.match(/^(\s*)([^:\s]+):/);
-                    if (keyMatch) {
-                        const [, indent, key] = keyMatch;
-                        const value = line.slice(keyMatch[0].length);
-                        return `${indent}<span class="yaml-key">${escape(key)}</span>:${escape(value)}`;
-                    }
-                    return escape(line);
-                })
-                .join("\n");
+                const formattedYaml = response.data
+                    .split("\n")
+                    .map((line) => {
+                        const keyMatch = line.match(/^(\s*)([^:\s]+):/);
+                        if (keyMatch) {
+                            const [, indent, key] = keyMatch;
+                            const value = line.slice(keyMatch[0].length);
+                            return `${indent}<span class="yaml-key">${escape(key)}</span>:${escape(value)}`;
+                        }
+                        return escape(line);
+                    })
+                    .join("\n");
 
-            setSelectedName(pg.metadata.name);
-            setSelectedYaml(formattedYaml);
-            setOpenDialog(true);
-        } catch (err) {
-            console.error("Failed to fetch YAML:", err);
-            setError("Failed to fetch YAML: " + err.message);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+                setSelectedName(pg.metadata.name);
+                setSelectedYaml(formattedYaml);
+                setOpenDialog(true);
+            } catch (err) {
+                console.error("Failed to fetch YAML:", err);
+                setError(
+                    t("common.errors.fetchFailed", {
+                        resource: "YAML",
+                        message: err.message,
+                    }),
+                );
+            } finally {
+                setLoading(false);
+            }
+        },
+        [t],
+    );
 
     const handleCloseDialog = useCallback(() => {
         setOpenDialog(false);
@@ -167,7 +182,7 @@ const PodGroups = () => {
 
     // For now, no creation dialog
     const handleCreate = () => {
-        alert("Create PodGroup not implemented yet");
+        alert(t("podgroups.createNotImplemented"));
     };
 
     return (
@@ -177,7 +192,7 @@ const PodGroups = () => {
                     <Typography variant="body1">{error}</Typography>
                 </Box>
             )}
-            <TitleComponent text="Volcano PodGroups" />
+            <TitleComponent text={t("podgroups.pageTitle")} />
             <Box>
                 <SearchBar
                     searchText={searchText}
@@ -186,11 +201,11 @@ const PodGroups = () => {
                     handleRefresh={fetchPodGroups}
                     fetchData={fetchPodGroups}
                     isRefreshing={loading}
-                    placeholder="Search PodGroups..."
-                    refreshLabel="Refresh Listings"
-                    createlabel="Create PodGroup"
-                    dialogTitle="Create PodGroup"
-                    dialogResourceNameLabel="Name"
+                    placeholder={t("podgroups.search")}
+                    refreshLabel={t("podgroups.refresh")}
+                    createlabel={t("podgroups.create")}
+                    dialogTitle={t("podgroups.createDialogTitle")}
+                    dialogResourceNameLabel={t("podgroups.resourceNameLabel")}
                     dialogResourceType="PodGroup"
                     onCreateClick={handleCreate}
                 />
@@ -210,6 +225,7 @@ const PodGroups = () => {
             <JobPagination
                 pagination={pagination}
                 totalJobs={totalItems} // Prop name in JobPagination is totalJobs
+                totalLabelKey="podgroups.totalCount"
                 handleChangePage={handleChangePage}
                 handleChangeRowsPerPage={handleChangeRowsPerPage}
             />

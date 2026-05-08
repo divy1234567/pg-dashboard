@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 import SearchBar from "../Searchbar";
 import TitleComponent from "../Titlecomponent";
 import { fetchAllNamespaces } from "../utils";
@@ -9,6 +10,7 @@ import PodsPagination from "./PodsPagination";
 import PodDetailsDialog from "./PodDetailsDialog";
 
 const Pods = () => {
+    const { t } = useTranslation();
     const [pods, setPods] = useState([]);
     const [cachedPods, setCachedPods] = useState([]);
     const [, setLoading] = useState(true);
@@ -51,12 +53,17 @@ const Pods = () => {
             setCachedPods(data.items || []);
             setTotalPods(data.totalCount || 0);
         } catch (err) {
-            setError("Failed to fetch pods: " + err.message);
+            setError(
+                t("common.errors.fetchFailed", {
+                    resource: t("pods.resourceType"),
+                    message: err.message,
+                }),
+            );
             setCachedPods([]);
         } finally {
             setLoading(false);
         }
-    }, [searchText, filters]);
+    }, [searchText, filters, t]);
 
     useEffect(() => {
         fetchPods();
@@ -107,55 +114,72 @@ const Pods = () => {
             });
 
             if (!response.ok) {
-                let errorMsg = "Unknown error";
+                let errorMsg = t("common.errors.unknown");
                 try {
                     const errData = await response.json();
                     errorMsg = errData.error || response.statusText;
                 } catch {
                     // ignore error
                 }
-                alert("Error creating pod: " + errorMsg);
+                alert(
+                    t("common.errors.createError", {
+                        resource: t("pods.resourceType"),
+                        message: errorMsg,
+                    }),
+                );
                 return;
             }
 
-            alert("Pod created successfully!");
+            alert(
+                t("common.errors.createSuccess", {
+                    resource: t("pods.resourceType"),
+                }),
+            );
             await fetchData(); // Now fetchData is defined in the same scope
         } catch (err) {
-            alert("Network error: " + err.message);
+            alert(t("common.errors.networkError", { message: err.message }));
         }
     };
 
-    const handlePodClick = useCallback(async (pod) => {
-        try {
-            setLoading(true);
-            const response = await axios.get(
-                `/api/pod/${pod.metadata.namespace}/${pod.metadata.name}/yaml`,
-                { responseType: "text" },
-            );
+    const handlePodClick = useCallback(
+        async (pod) => {
+            try {
+                setLoading(true);
+                const response = await axios.get(
+                    `/api/pod/${pod.metadata.namespace}/${pod.metadata.name}/yaml`,
+                    { responseType: "text" },
+                );
 
-            const formattedYaml = response.data
-                .split("\n")
-                .map((line) => {
-                    const keyMatch = line.match(/^(\s*)([^:\s]+):/);
-                    if (keyMatch) {
-                        const [, indent, key] = keyMatch;
-                        const value = line.slice(keyMatch[0].length);
-                        return `${indent}<span class="yaml-key">${key}</span>:${value}`;
-                    }
-                    return line;
-                })
-                .join("\n");
+                const formattedYaml = response.data
+                    .split("\n")
+                    .map((line) => {
+                        const keyMatch = line.match(/^(\s*)([^:\s]+):/);
+                        if (keyMatch) {
+                            const [, indent, key] = keyMatch;
+                            const value = line.slice(keyMatch[0].length);
+                            return `${indent}<span class="yaml-key">${key}</span>:${value}`;
+                        }
+                        return line;
+                    })
+                    .join("\n");
 
-            setSelectedPodName(pod.metadata.name);
-            setSelectedPodYaml(formattedYaml);
-            setOpenDialog(true);
-        } catch (err) {
-            console.error("Failed to fetch pod YAML:", err);
-            setError("Failed to fetch pod YAML: " + err.message);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+                setSelectedPodName(pod.metadata.name);
+                setSelectedPodYaml(formattedYaml);
+                setOpenDialog(true);
+            } catch (err) {
+                console.error("Failed to fetch pod YAML:", err);
+                setError(
+                    t("common.errors.fetchFailed", {
+                        resource: `${t("pods.resourceType")} YAML`,
+                        message: err.message,
+                    }),
+                );
+            } finally {
+                setLoading(false);
+            }
+        },
+        [t],
+    );
 
     const handleCloseDialog = useCallback(() => {
         setOpenDialog(false);
@@ -185,7 +209,7 @@ const Pods = () => {
                     <Typography variant="body1">{error}</Typography>
                 </Box>
             )}
-            <TitleComponent text="Volcano Pods Status" />
+            <TitleComponent text={t("pods.pageTitle")} />
             <Box>
                 <SearchBar
                     searchText={searchText}
@@ -194,11 +218,11 @@ const Pods = () => {
                     handleRefresh={handleRefresh}
                     fetchData={fetchPods}
                     isRefreshing={false} // Update if needed
-                    placeholder="Search Pods..."
-                    refreshLabel="Refresh Pods"
-                    createlabel="Create Pod"
-                    dialogTitle="Create a Pod"
-                    dialogResourceNameLabel="Pod Name"
+                    placeholder={t("pods.search")}
+                    refreshLabel={t("pods.refresh")}
+                    createlabel={t("pods.create")}
+                    dialogTitle={t("pods.createDialogTitle")}
+                    dialogResourceNameLabel={t("pods.resourceNameLabel")}
                     dialogResourceType="Pod"
                     onCreateClick={handleCreatePod}
                 />

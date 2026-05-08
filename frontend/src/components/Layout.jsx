@@ -19,6 +19,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
 import CategoryIcon from "@mui/icons-material/Category";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 // use relative path to load Logo
 import volcanoLogo from "../assets/volcano-icon-color.svg";
@@ -27,6 +29,7 @@ const Layout = () => {
     // Hooks must be used inside component functions
     const location = useLocation();
     const [open, setOpen] = useState(true);
+    const { t } = useTranslation();
 
     // constants can be kept outside the component
     const volcanoOrange = "#E34C26"; // orange red theme
@@ -38,11 +41,15 @@ const Layout = () => {
     };
 
     const menuItems = [
-        { text: "Dashboard", icon: <HomeIcon />, path: "/dashboard" },
-        { text: "Jobs", icon: <AssignmentIcon />, path: "/jobs" },
-        { text: "Queues", icon: <CloudIcon />, path: "/queues" },
-        { text: "Pods", icon: <WorkspacesIcon />, path: "/pods" },
-        { text: "PodGroups", icon: <CategoryIcon />, path: "/podgroups" },
+        { text: t("nav.dashboard"), icon: <HomeIcon />, path: "/dashboard" },
+        { text: t("nav.jobs"), icon: <AssignmentIcon />, path: "/jobs" },
+        { text: t("nav.queues"), icon: <CloudIcon />, path: "/queues" },
+        { text: t("nav.pods"), icon: <WorkspacesIcon />, path: "/pods" },
+        {
+            text: t("nav.podgroups"),
+            icon: <CategoryIcon />,
+            path: "/podgroups",
+        },
     ];
 
     return (
@@ -57,7 +64,7 @@ const Layout = () => {
                 <Toolbar>
                     <IconButton
                         color="inherit"
-                        aria-label="toggle drawer"
+                        aria-label={t("nav.toggleDrawer")}
                         onClick={handleDrawerToggle}
                         edge="start"
                         sx={{ mr: 2, color: "white" }}
@@ -71,10 +78,12 @@ const Layout = () => {
                         sx={{
                             color: "#ffffff",
                             fontWeight: 500,
+                            flexGrow: 1,
                         }}
                     >
-                        Volcano Dashboard
+                        {t("common.appName")}
                     </Typography>
+                    <LanguageSwitcher />
                 </Toolbar>
             </AppBar>
 
@@ -163,7 +172,7 @@ const Layout = () => {
                 >
                     <img
                         src={volcanoLogo}
-                        alt="Volcano Logo"
+                        alt={t("common.logoAlt")}
                         style={{
                             maxWidth: open ? "150px" : "60px",
                             height: "auto",

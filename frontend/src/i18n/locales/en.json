@@ -1,0 +1,211 @@
+{
+    "common": {
+        "appName": "Volcano Dashboard",
+        "noData": "No data available",
+        "language": "Language",
+        "languageEnglish": "English",
+        "languageChinese": "中文",
+        "logoAlt": "Volcano Logo",
+        "actions": {
+            "create": "Create",
+            "cancel": "Cancel",
+            "delete": "Delete",
+            "edit": "Edit",
+            "update": "Update",
+            "updating": "Updating…",
+            "close": "Close",
+            "refresh": "Refresh",
+            "refreshing": "Refreshing...",
+            "sort": "Sort",
+            "submit": "Submit"
+        },
+        "table": {
+            "name": "Name",
+            "namespace": "Namespace",
+            "queue": "Queue",
+            "creationTime": "Creation Time",
+            "status": "Status",
+            "state": "State",
+            "actions": "Actions",
+            "minMember": "Min Member",
+            "age": "Age",
+            "filter": "Filter: {{value}}",
+            "all": "All",
+            "unknown": "Unknown"
+        },
+        "pagination": {
+            "perPage": "{{count}} per page"
+        },
+        "errors": {
+            "title": "Error",
+            "unexpected": "An unexpected error occurred.",
+            "fetchFailed": "Failed to fetch {{resource}}: {{message}}",
+            "networkError": "Network error: {{message}}",
+            "createError": "Error creating {{resource}}: {{message}}",
+            "createSuccess": "{{resource}} created successfully!",
+            "createFailed": "Failed to create {{resource}}: {{message}}",
+            "unknown": "Unknown error",
+            "invalidYaml": "Invalid YAML format. Please check your input.",
+            "yamlMustObject": "YAML must describe an object.",
+            "saveFailed": "Failed to save"
+        },
+        "yamlDialog": {
+            "title": "{{resource}} YAML - {{name}}"
+        },
+        "deleteConfirm": {
+            "message": "Are you sure you want to delete {{resource}} \"{{name}}\"? This action cannot be undone."
+        }
+    },
+    "nav": {
+        "dashboard": "Dashboard",
+        "jobs": "Jobs",
+        "queues": "Queues",
+        "pods": "Pods",
+        "podgroups": "PodGroups",
+        "toggleDrawer": "Toggle drawer"
+    },
+    "dashboard": {
+        "title": "Volcano Dashboard",
+        "refresh": "Refresh Data",
+        "stats": {
+            "totalJobs": "Total Jobs",
+            "activeQueues": "Active Queues",
+            "runningPods": "Running Pods",
+            "completeRate": "Complete Rate"
+        }
+    },
+    "charts": {
+        "jobStatus": {
+            "title": "Jobs Status",
+            "completed": "Completed",
+            "running": "Running",
+            "failed": "Failed"
+        },
+        "queueResources": {
+            "title": "Queue Resources",
+            "allocated": "{{resource}} Allocated",
+            "capacity": "{{resource}} Capacity",
+            "resourceOption": "{{resource}} Resources",
+            "yAxis": {
+                "memory": "Memory (Gi)",
+                "cpu": "CPU Cores",
+                "pods": "Pod Count",
+                "gpu": "GPU Count",
+                "default": "Amount"
+            },
+            "noData": "No data available for selected resource type"
+        },
+        "podStatusTimeline": "Pod Status Timeline",
+        "runningPodsLabel": "Running Pods"
+    },
+    "jobs": {
+        "pageTitle": "Volcano Jobs Status",
+        "search": "Search jobs...",
+        "refresh": "Refresh Job Listings",
+        "create": "Create Job",
+        "createDialogTitle": "Create a Job",
+        "createYamlTitle": "Create Job (YAML)",
+        "yamlInstruction": "Paste or type your Job YAML specification below:",
+        "resourceNameLabel": "Job Name",
+        "resourceType": "Job",
+        "totalCount": "Total Jobs: {{count}}",
+        "empty": "No jobs found.",
+        "yamlTitle": "Job YAML - {{name}}",
+        "edit": "Edit Job",
+        "delete": "Delete Job",
+        "phase": {
+            "running": "Running",
+            "pending": "Pending",
+            "completed": "Completed",
+            "failed": "Failed"
+        }
+    },
+    "queues": {
+        "pageTitle": "Volcano Queues Status",
+        "search": "Search queues...",
+        "refresh": "Refresh Queues",
+        "create": "Create Queue",
+        "createDialogTitle": "Create a Queue",
+        "resourceNameLabel": "Queue Name",
+        "resourceType": "Queue",
+        "totalCount": "Total Queues: {{count}}",
+        "empty": "No queues found.",
+        "yamlTitle": "Queue YAML - {{name}}",
+        "allocatedField": "Allocated {{field}}",
+        "edit": "Edit Queue",
+        "delete": "Delete Queue",
+        "form": "Form",
+        "yaml": "YAML",
+        "section": {
+            "array": "{{key}} (Array)",
+            "item": "Item {{index}}"
+        },
+        "state": {
+            "open": "Open",
+            "closing": "Closing",
+            "closed": "Closed"
+        }
+    },
+    "pods": {
+        "pageTitle": "Volcano Pods Status",
+        "search": "Search Pods...",
+        "refresh": "Refresh Pods",
+        "create": "Create Pod",
+        "createDialogTitle": "Create a Pod",
+        "resourceNameLabel": "Pod Name",
+        "resourceType": "Pod",
+        "totalCount": "Total Pods: {{count}}",
+        "yamlTitle": "Pod YAML - {{name}}",
+        "phase": {
+            "running": "Running",
+            "pending": "Pending",
+            "succeeded": "Succeeded",
+            "failed": "Failed"
+        }
+    },
+    "podgroups": {
+        "pageTitle": "Volcano PodGroups",
+        "search": "Search PodGroups...",
+        "refresh": "Refresh Listings",
+        "create": "Create PodGroup",
+        "createDialogTitle": "Create PodGroup",
+        "resourceNameLabel": "Name",
+        "resourceType": "PodGroup",
+        "yamlTitle": "PodGroup YAML - {{name}}",
+        "empty": "No podgroups found.",
+        "totalCount": "Total PodGroups: {{count}}",
+        "createNotImplemented": "Create PodGroup not implemented yet"
+    },
+    "createDialog": {
+        "namespaceLabel": "Namespace",
+        "namespacePlaceholder": "default",
+        "containerName": "Container Name",
+        "containerNamePlaceholder": "my-container",
+        "containerNameRequired": "Container name is required",
+        "containerImage": "Container Image",
+        "containerImagePlaceholder": "nginx:latest",
+        "containerImageRequired": "Container image is required",
+        "containerPort": "Container Port",
+        "containerPortPlaceholder": "80",
+        "containerPortRequired": "Container port is required and must be positive",
+        "weight": "Weight *",
+        "weightRequired": "Weight is required and must be positive",
+        "reclaimable": "Reclaimable",
+        "cpu": "CPU",
+        "cpuPlaceholder": "e.g. 1000m",
+        "memory": "Memory",
+        "memoryPlaceholder": "e.g. 1Gi",
+        "customScalarResources": "Custom Scalar Resources",
+        "key": "Key",
+        "keyPlaceholder": "e.g. nvidia.com/gpu",
+        "value": "Value",
+        "valuePlaceholder": "e.g. 1",
+        "resourcesOptional": "{{section}} Resources (Optional)",
+        "nameRequired": "{{resource}} name is required",
+        "section": {
+            "guarantee": "Guarantee",
+            "capability": "Capability",
+            "deserved": "Deserved"
+        }
+    }
+}

@@ -8,8 +8,10 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const PodDetailsDialog = ({ open, podName, podYaml, onClose }) => {
+    const { t } = useTranslation();
     return (
         <Dialog
             open={open}
@@ -26,7 +28,7 @@ const PodDetailsDialog = ({ open, podName, podYaml, onClose }) => {
                 },
             }}
         >
-            <DialogTitle>Pod YAML - {podName}</DialogTitle>
+            <DialogTitle>{t("pods.yamlTitle", { name: podName })}</DialogTitle>
             <DialogContent>
                 <Box
                     sx={{
@@ -75,7 +77,7 @@ const PodDetailsDialog = ({ open, podName, podYaml, onClose }) => {
                             },
                         }}
                     >
-                        Close
+                        {t("common.actions.close")}
                     </Button>
                 </Box>
             </DialogActions>

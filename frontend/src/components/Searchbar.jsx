@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTimes, faRedo } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 import CreateDialog from "./CreateDialog";
 import CreateJobDialog from "./jobs/JobTable/CreateJobDialog";
 
@@ -30,6 +31,7 @@ const SearchBar = ({
     onCreateClick,
     createlabel,
 }) => {
+    const { t } = useTranslation();
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const handleOpenDialog = () => setDialogOpen(true);
@@ -127,7 +129,7 @@ const SearchBar = ({
                                     />
                                     <span>
                                         {isRefreshing
-                                            ? "Refreshing..."
+                                            ? t("common.actions.refreshing")
                                             : refreshLabel}
                                     </span>
                                 </Button>

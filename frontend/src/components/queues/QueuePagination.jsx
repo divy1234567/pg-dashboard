@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, Pagination, Select, MenuItem } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const QueuePagination = ({
     pagination,
@@ -7,6 +8,7 @@ const QueuePagination = ({
     handleChangeRowsPerPage,
     handleChangePage,
 }) => {
+    const { t } = useTranslation();
     return (
         <Box
             sx={{
@@ -21,9 +23,15 @@ const QueuePagination = ({
                 onChange={handleChangeRowsPerPage}
                 size="small"
             >
-                <MenuItem value={5}>5 per page</MenuItem>
-                <MenuItem value={10}>10 per page</MenuItem>
-                <MenuItem value={20}>20 per page</MenuItem>
+                <MenuItem value={5}>
+                    {t("common.pagination.perPage", { count: 5 })}
+                </MenuItem>
+                <MenuItem value={10}>
+                    {t("common.pagination.perPage", { count: 10 })}
+                </MenuItem>
+                <MenuItem value={20}>
+                    {t("common.pagination.perPage", { count: 20 })}
+                </MenuItem>
             </Select>
             <Box
                 sx={{
@@ -35,7 +43,7 @@ const QueuePagination = ({
                 }}
             >
                 <Typography variant="body2" sx={{ mr: 2 }}>
-                    Total Queues: {totalQueues}
+                    {t("queues.totalCount", { count: totalQueues })}
                 </Typography>
                 <Pagination
                     count={Math.ceil(totalQueues / pagination.rowsPerPage)}

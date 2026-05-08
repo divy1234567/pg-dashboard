@@ -1,0 +1,211 @@
+{
+    "common": {
+        "appName": "Volcano 仪表板",
+        "noData": "暂无可用数据",
+        "language": "语言",
+        "languageEnglish": "English",
+        "languageChinese": "中文",
+        "logoAlt": "Volcano 标志",
+        "actions": {
+            "create": "创建",
+            "cancel": "取消",
+            "delete": "删除",
+            "edit": "编辑",
+            "update": "更新",
+            "updating": "更新中…",
+            "close": "关闭",
+            "refresh": "刷新",
+            "refreshing": "刷新中…",
+            "sort": "排序",
+            "submit": "提交"
+        },
+        "table": {
+            "name": "名称",
+            "namespace": "命名空间",
+            "queue": "队列",
+            "creationTime": "创建时间",
+            "status": "状态",
+            "state": "状态",
+            "actions": "操作",
+            "minMember": "最小成员数",
+            "age": "存在时间",
+            "filter": "筛选：{{value}}",
+            "all": "全部",
+            "unknown": "未知"
+        },
+        "pagination": {
+            "perPage": "每页 {{count}} 条"
+        },
+        "errors": {
+            "title": "错误",
+            "unexpected": "发生意外错误。",
+            "fetchFailed": "获取{{resource}}失败：{{message}}",
+            "networkError": "网络错误：{{message}}",
+            "createError": "创建{{resource}}时出错：{{message}}",
+            "createSuccess": "{{resource}}创建成功！",
+            "createFailed": "创建{{resource}}失败：{{message}}",
+            "unknown": "未知错误",
+            "invalidYaml": "YAML 格式无效。请检查输入。",
+            "yamlMustObject": "YAML 必须描述一个对象。",
+            "saveFailed": "保存失败"
+        },
+        "yamlDialog": {
+            "title": "{{resource}} YAML - {{name}}"
+        },
+        "deleteConfirm": {
+            "message": "确定要删除{{resource}}\"{{name}}\"吗？此操作无法撤销。"
+        }
+    },
+    "nav": {
+        "dashboard": "仪表板",
+        "jobs": "作业",
+        "queues": "队列",
+        "pods": "容器组",
+        "podgroups": "Pod 组",
+        "toggleDrawer": "切换侧边栏"
+    },
+    "dashboard": {
+        "title": "Volcano 仪表板",
+        "refresh": "刷新数据",
+        "stats": {
+            "totalJobs": "作业总数",
+            "activeQueues": "活跃队列",
+            "runningPods": "运行中的容器组",
+            "completeRate": "完成率"
+        }
+    },
+    "charts": {
+        "jobStatus": {
+            "title": "作业状态",
+            "completed": "已完成",
+            "running": "运行中",
+            "failed": "失败"
+        },
+        "queueResources": {
+            "title": "队列资源",
+            "allocated": "{{resource}} 已分配",
+            "capacity": "{{resource}} 容量",
+            "resourceOption": "{{resource}} 资源",
+            "yAxis": {
+                "memory": "内存 (Gi)",
+                "cpu": "CPU 核数",
+                "pods": "容器组数量",
+                "gpu": "GPU 数量",
+                "default": "数量"
+            },
+            "noData": "所选资源类型暂无可用数据"
+        },
+        "podStatusTimeline": "容器组状态时间线",
+        "runningPodsLabel": "运行中的容器组"
+    },
+    "jobs": {
+        "pageTitle": "Volcano 作业状态",
+        "search": "搜索作业…",
+        "refresh": "刷新作业列表",
+        "create": "创建作业",
+        "createDialogTitle": "创建作业",
+        "createYamlTitle": "创建作业（YAML）",
+        "yamlInstruction": "在下方粘贴或输入作业 YAML 规范：",
+        "resourceNameLabel": "作业名称",
+        "resourceType": "作业",
+        "totalCount": "作业总数：{{count}}",
+        "empty": "未找到作业。",
+        "yamlTitle": "作业 YAML - {{name}}",
+        "edit": "编辑作业",
+        "delete": "删除作业",
+        "phase": {
+            "running": "运行中",
+            "pending": "等待中",
+            "completed": "已完成",
+            "failed": "失败"
+        }
+    },
+    "queues": {
+        "pageTitle": "Volcano 队列状态",
+        "search": "搜索队列…",
+        "refresh": "刷新队列",
+        "create": "创建队列",
+        "createDialogTitle": "创建队列",
+        "resourceNameLabel": "队列名称",
+        "resourceType": "队列",
+        "totalCount": "队列总数：{{count}}",
+        "empty": "未找到队列。",
+        "yamlTitle": "队列 YAML - {{name}}",
+        "allocatedField": "已分配 {{field}}",
+        "edit": "编辑队列",
+        "delete": "删除队列",
+        "form": "表单",
+        "yaml": "YAML",
+        "section": {
+            "array": "{{key}}（数组）",
+            "item": "项目 {{index}}"
+        },
+        "state": {
+            "open": "开放",
+            "closing": "关闭中",
+            "closed": "已关闭"
+        }
+    },
+    "pods": {
+        "pageTitle": "Volcano 容器组状态",
+        "search": "搜索容器组…",
+        "refresh": "刷新容器组",
+        "create": "创建容器组",
+        "createDialogTitle": "创建容器组",
+        "resourceNameLabel": "容器组名称",
+        "resourceType": "容器组",
+        "totalCount": "容器组总数：{{count}}",
+        "yamlTitle": "容器组 YAML - {{name}}",
+        "phase": {
+            "running": "运行中",
+            "pending": "等待中",
+            "succeeded": "已成功",
+            "failed": "失败"
+        }
+    },
+    "podgroups": {
+        "pageTitle": "Volcano Pod 组",
+        "search": "搜索 Pod 组…",
+        "refresh": "刷新列表",
+        "create": "创建 Pod 组",
+        "createDialogTitle": "创建 Pod 组",
+        "resourceNameLabel": "名称",
+        "resourceType": "Pod 组",
+        "yamlTitle": "Pod 组 YAML - {{name}}",
+        "empty": "未找到 Pod 组。",
+        "totalCount": "Pod 组总数：{{count}}",
+        "createNotImplemented": "创建 Pod 组功能尚未实现"
+    },
+    "createDialog": {
+        "namespaceLabel": "命名空间",
+        "namespacePlaceholder": "default",
+        "containerName": "容器名称",
+        "containerNamePlaceholder": "my-container",
+        "containerNameRequired": "容器名称为必填项",
+        "containerImage": "容器镜像",
+        "containerImagePlaceholder": "nginx:latest",
+        "containerImageRequired": "容器镜像为必填项",
+        "containerPort": "容器端口",
+        "containerPortPlaceholder": "80",
+        "containerPortRequired": "容器端口为必填项且必须为正数",
+        "weight": "权重 *",
+        "weightRequired": "权重为必填项且必须为正数",
+        "reclaimable": "可回收",
+        "cpu": "CPU",
+        "cpuPlaceholder": "例如 1000m",
+        "memory": "内存",
+        "memoryPlaceholder": "例如 1Gi",
+        "customScalarResources": "自定义标量资源",
+        "key": "键",
+        "keyPlaceholder": "例如 nvidia.com/gpu",
+        "value": "值",
+        "valuePlaceholder": "例如 1",
+        "resourcesOptional": "{{section}}资源（可选）",
+        "nameRequired": "{{resource}}名称为必填项",
+        "section": {
+            "guarantee": "保障",
+            "capability": "能力",
+            "deserved": "应得"
+        }
+    }
+}

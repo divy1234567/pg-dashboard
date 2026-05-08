@@ -10,8 +10,10 @@ import {
 } from "@mui/material";
 import Editor from "@monaco-editor/react";
 import yaml from "js-yaml";
+import { useTranslation } from "react-i18next";
 
 const JobEditDialog = ({ open, job, onClose, onSave }) => {
+    const { t } = useTranslation();
     const [editorValue, setEditorValue] = useState("");
     const [editMode, setEditMode] = useState("yaml");
 
@@ -35,7 +37,7 @@ const JobEditDialog = ({ open, job, onClose, onSave }) => {
             onClose();
         } catch (err) {
             console.error("Parsing error:", err);
-            alert("Invalid YAML format. Please check your input.");
+            alert(t("common.errors.invalidYaml"));
         }
     };
 
@@ -48,7 +50,7 @@ const JobEditDialog = ({ open, job, onClose, onSave }) => {
                     alignItems: "center",
                 }}
             >
-                Edit Job
+                {t("jobs.edit")}
                 <ToggleButtonGroup
                     value={editMode}
                     exclusive
@@ -72,14 +74,14 @@ const JobEditDialog = ({ open, job, onClose, onSave }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="primary" variant="contained">
-                    Cancel
+                    {t("common.actions.cancel")}
                 </Button>
                 <Button
                     onClick={handleSave}
                     color="primary"
                     variant="contained"
                 >
-                    Update
+                    {t("common.actions.update")}
                 </Button>
             </DialogActions>
         </Dialog>

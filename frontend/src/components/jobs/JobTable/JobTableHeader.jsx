@@ -10,6 +10,7 @@ import {
     alpha,
 } from "@mui/material";
 import { ArrowDownward, ArrowUpward, UnfoldMore } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 import JobFilters from "./JobFilters";
 
 const JobTableHeader = ({
@@ -24,6 +25,22 @@ const JobTableHeader = ({
     toggleSortDirection,
 }) => {
     const theme = useTheme();
+    const { t } = useTranslation();
+
+    // Filterable columns. `key` is the filter identifier (matches the
+    // shape of `filters`/`anchorEl`) — `label` is what we render.
+    const filterColumns = [
+        {
+            key: "namespace",
+            label: t("common.table.namespace"),
+            options: allNamespaces,
+        },
+        {
+            key: "queue",
+            label: t("common.table.queue"),
+            options: allQueues,
+        },
+    ];
 
     return (
         <TableHead>
@@ -45,13 +62,13 @@ const JobTableHeader = ({
                         fontWeight="700"
                         color="text.primary"
                     >
-                        Name
+                        {t("common.table.name")}
                     </Typography>
                 </TableCell>
 
-                {["Namespace", "Queue"].map((field) => (
+                {filterColumns.map(({ key, label, options }) => (
                     <TableCell
-                        key={field}
+                        key={key}
                         sx={{
                             backgroundColor: alpha(
                                 theme.palette.background.paper,
@@ -74,19 +91,15 @@ const JobTableHeader = ({
                                 fontWeight="700"
                                 color="text.primary"
                             >
-                                {field}
+                                {label}
                             </Typography>
                             <JobFilters
-                                filterType={field.toLowerCase()}
-                                currentValue={filters[field.toLowerCase()]}
-                                options={
-                                    field === "Namespace"
-                                        ? allNamespaces
-                                        : allQueues
-                                }
+                                filterType={key}
+                                currentValue={filters[key]}
+                                options={options}
                                 handleFilterClick={handleFilterClick}
                                 handleFilterClose={handleFilterClose}
-                                anchorEl={anchorEl[field.toLowerCase()]}
+                                anchorEl={anchorEl[key]}
                             />
                         </Box>
                     </TableCell>
@@ -109,7 +122,7 @@ const JobTableHeader = ({
                         fontWeight="700"
                         color="text.primary"
                     >
-                        Creation Time
+                        {t("common.table.creationTime")}
                     </Typography>
                     <Button
                         size="small"
@@ -146,7 +159,7 @@ const JobTableHeader = ({
                             },
                         }}
                     >
-                        Sort
+                        {t("common.actions.sort")}
                     </Button>
                 </TableCell>
 
@@ -167,7 +180,7 @@ const JobTableHeader = ({
                         fontWeight="700"
                         color="text.primary"
                     >
-                        Status
+                        {t("common.table.status")}
                     </Typography>
                     <JobFilters
                         filterType="status"
@@ -198,7 +211,7 @@ const JobTableHeader = ({
                         color="text.primary"
                         sx={{ letterSpacing: "0.02em" }}
                     >
-                        Actions
+                        {t("common.table.actions")}
                     </Typography>
                 </TableCell>
             </TableRow>
